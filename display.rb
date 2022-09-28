@@ -43,4 +43,19 @@ module Display
       print "\nPress '1' to be code-maker."
       print "\nPress '2' to be code-breaker."
     end
-  end
+
+    def play_again?
+        puts "\nEnter 'y' to play again."
+        input = gets.chomp
+        if input.downcase == 'y'
+          Game.new.play 
+        else
+          print "Thanks for playing!"
+        end
+    end
+
+    def game_over
+        print "\nThe combination was guessed!" if @A == 4 
+        print "\nThe combination wasn't guessed!" if @A != 4 && @guesses == 12
+    end
+end
