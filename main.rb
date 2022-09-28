@@ -1,7 +1,6 @@
 require_relative 'display.rb'
 require_relative 'human.rb'
 require_relative 'computer.rb'
-require_relative 'game-logic.rb'
 
 class Game
   include Display
