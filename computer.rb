@@ -7,7 +7,6 @@ class CodeBreaker
       @possible_guesses = ["1", "2", "3", "4"].repeated_permutation(4).to_a
       @A = 0
       @B = 0
-      @previous_score = 0
     end 
     
     def play
@@ -26,13 +25,11 @@ class CodeBreaker
     end
   
     def make_guess
-      i = 0
       while @guesses < 12
         if (@A + @B) == 4
-          @guess.shuffle! until @maker_code == @guess || @guesses == 12
+          @guess.shuffle!
         else
-          @guess = @possible_guesses[i]  if i < @possible_guesses.length()
-          i += 1
+          @guess = @possible_guesses.sample
         end
         @guesses += 1
         print "\nComputer's Guess: #{@guess}"
@@ -40,17 +37,22 @@ class CodeBreaker
         feedback(@maker_code, @guess)
         break if @A == 4
       end
+      game_over
       play_again?
     end
-    
+  
     def feedback(code, guess)
-      @previous_score = @A + @B
+      visited = Array.new(guess.length) { false }
+  
       @A = 0
       @B = 0
+  
       code.each_with_index do |item, index|
-        if code[index] == guess[index]
+        if item == guess[index]
           @A += 1
-        elsif guess.include?(code[index])
+          @B -= 1 if visited[index]
+          visited[index] = true
+        elsif guess.each_index.any? { |idx| guess[idx] == item && !visited[idx] && visited[idx] = true  }
           @B += 1
         elsif !code.include?(guess[index])
           remove_digit(guess[index])
@@ -58,21 +60,10 @@ class CodeBreaker
       end
       print "\nA:#{@A} B:#{@B}"
     end
-          
+  
     def remove_digit(digit)
       @possible_guesses.each_with_index do |item, index|
         @possible_guesses.delete_if { |item| item[index] == digit }
       end
     end
-  
-    def play_again?
-      puts "\nEnter 'y' to play again."
-      input = gets.chomp
-      if input.downcase == 'y'
-        Game.new.play 
-      else
-        print "Thanks for playing!"
-      end
-    end
-  
-  end
+end
