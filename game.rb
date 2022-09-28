@@ -21,7 +21,12 @@ class Game
     game_mode_selection
   end
 
-  def code_maker; end
+  def code_maker;
+    CodeBreaker.new.play
+  end
 
-  def code_breaker; end
+  def code_breaker
+    CodeMaker.new.play
+  end
 end
+
